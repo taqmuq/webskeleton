@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Created by taqmuq on 12/12/16.
  */
 @Controller
-public class HelloWorldController {
-    @RequestMapping
-    public String sayHello() {
+public class IndexController {
+    @RequestMapping("/")
+    public String home() {
         return "index";
     }
 }
