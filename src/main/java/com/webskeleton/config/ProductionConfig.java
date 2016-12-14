@@ -12,7 +12,7 @@ import org.springframework.context.annotation.PropertySource;
  */
 @Configuration
 @Profile("prod")
-@PropertySource("file:///${user.home}/Learn/Taqmuq/github/.webskeleton/application-dev.properties")
+@PropertySource("file:///${user.home}/Learn/Taqmuq/github/.webskeleton/application-prod.properties")
 public class ProductionConfig {
 
     @Bean
