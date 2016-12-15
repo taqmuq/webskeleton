@@ -1,4 +1,4 @@
-package com.webskeleton.web.i18n;
+package com.webskeleton.backend.service;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

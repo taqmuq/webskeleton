@@ -5,21 +5,17 @@ import com.webskeleton.backend.persistence.domain.backend.Plan;
 import com.webskeleton.backend.persistence.domain.backend.Role;
 import com.webskeleton.backend.persistence.domain.backend.User;
 import com.webskeleton.backend.persistence.domain.backend.UserRole;
-import com.webskeleton.backend.persistence.repositories.PlanRepository;
-import com.webskeleton.backend.persistence.repositories.RoleRepository;
-import com.webskeleton.backend.persistence.repositories.UserRepository;
 import com.webskeleton.enums.PlansEnum;
 import com.webskeleton.enums.RolesEnum;
-import com.webskeleton.utils.UsersUtils;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -27,18 +23,11 @@ import java.util.Set;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = WebskeletonApplication.class)
-public class RepositoriesIntegrationTest {
-
-    @Autowired
-    private PlanRepository planRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+public class UserRepositoryIntegrationTest extends AbstractIntegrationTest {
 
 
+
+    @Rule public TestName testName = new TestName();
 
 
     @Before
@@ -69,24 +58,11 @@ public class RepositoriesIntegrationTest {
     @Test
     public void createNewUser() throws Exception {
 
-        Plan basicPlan = createPlan(PlansEnum.BASIC);
-        planRepository.save(basicPlan);
+        String username = testName.getMethodName();
+        String email = testName.getMethodName() + "@webskeleton.com";
 
-        User basicUser = UsersUtils.createBasicUser();
-        basicUser.setPlan(basicPlan);
+        User basicUser = createUser(username, email);
 
-        Role basicRole = createRole(RolesEnum.BASIC);
-        Set<UserRole> userRoles = new HashSet<>();
-        UserRole userRole = new UserRole(basicUser, basicRole);
-        userRoles.add(userRole);
-
-        basicUser.getUserRoles().addAll(userRoles);
-
-        for (UserRole ur : userRoles) {
-            roleRepository.save(ur.getRole());
-        }
-
-        basicUser = userRepository.save(basicUser);
         User newlyCreatedUser = userRepository.findOne(basicUser.getId());
         Assert.assertNotNull(newlyCreatedUser);
         Assert.assertTrue(newlyCreatedUser.getId() != 0);
@@ -100,16 +76,14 @@ public class RepositoriesIntegrationTest {
 
     }
 
-    //-----------------> Private methods
+    @Test
+    public void testDeleteUser() throws Exception {
 
-    private Plan createPlan(PlansEnum plansEnum) {
-        return new Plan(plansEnum);
+        String username = testName.getMethodName();
+        String email = testName.getMethodName() + "@webskeleton.com";
+
+        User basicUser = createUser(username, email);
+        userRepository.delete(basicUser.getId());
     }
-
-    private Role createRole(RolesEnum rolesEnum) {
-        return new Role(rolesEnum);
-    }
-
-
 
 }
